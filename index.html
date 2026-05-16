@@ -1,93 +1,144 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-   <meta charset="UTF-8">
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <meta name="monetag" content="9f1c32448adef092d6e5298d2d5f04e4">
-     <title>Mon Jeu de Guerre Monétisé</title
-      <!-- SDK Telegram -->
+    <title>Mon Empire de Guerre</title>
+    
+    <!-- SDK Telegram obligatoire -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
-    <!-- ⚠️ ÉTAPE A : LE SCRIPT MONETAG -->
-    <!-- Remplacez l'URL ci-dessous par celle fournie par Monetag dans votre tableau de bord -->
-    <script src="https://sad.adsforgame.com/a/b.js" data-zone="11015041"></script>
+    <!-- 🟢 SCRIPT MONETAG : Remplacez VOTRE_ZONE_ID_ICI par vos 7 chiffres -->
+    <script src="https://sad.adsforgame.com/a/b.js" data-zone="1234567"></script>
 
     <style>
-        body { font-family: Arial, sans-serif; text-align: center; background: #1c2024; color: white; padding: 20px; }
-        button { background: #e67e22; border: none; padding: 12px 20px; color: white; font-size: 16px; border-radius: 5px; cursor: pointer; margin: 10px; display: inline-block; width: 80%; max-width: 300px; }
+        body { font-family: Arial, sans-serif; text-align: center; background: #1c2024; color: white; padding: 20px; margin: 0; }
+        h1 { font-size: 24px; margin-bottom: 5px; color: #f1c40f; }
+        button { background: #e67e22; border: none; padding: 14px 20px; color: white; font-size: 16px; border-radius: 8px; cursor: pointer; margin: 8px 0; display: inline-block; width: 90%; max-width: 320px; font-weight: bold; box-shadow: 0 4px 6px rgba(0,0,0,0.2); }
         button:hover { background: #d35400; }
-        .btn-pub { background: #2ecc71; font-weight: bold; } /* Bouton vert pour la pub */
+        .btn-pub { background: #2ecc71; } /* Vert pour la pub */
         .btn-pub:hover { background: #27ae60; }
-        .stats { font-size: 18px; margin: 20px 0; background: #2c3e50; padding: 15px; border-radius: 8px; }
+        .btn-attack { background: #c0392b; } /* Rouge pour le combat */
+        .btn-attack:hover { background: #962d22; }
+        .stats { font-size: 18px; margin: 15px 0; background: #2c3e50; padding: 15px; border-radius: 8px; border: 1px solid #34495e; }
+        .production { color: #2ecc71; font-size: 14px; margin-top: 5px; font-weight: bold; }
+        .mission-box { background: #2f3640; border: 2px dashed #718093; padding: 15px; border-radius: 8px; margin-top: 20px; }
     </style>
 </head>
 <body>
 
-    <h1>🪖 Quartier Général</h1>
+    <h1 id="titre-tma">🪖 QG de Commandement</h1>
     
     <div class="stats">
         <p>Or disponible : <span id="or">0</span> 💰</p>
-        <p>Soldats recrutés : <span id="soldats">0</span> 🎖️</p>
+        <p>Soldats entraînés : <span id="soldats">0</span> 🎖️</p>
+        <div class="production">Revenus passifs : +<span id="vitesse">0</span> Or / sec</div>
     </div>
 
-    <button onclick="genererOr()">Mine d'or (+10 Or)</button>
-    <button onclick="recruterSoldat()">Recruter 1 Soldat (50 Or)</button>
+    <button onclick="genererOr()">⛏️ Exploiter la Mine d'or (+10 Or)</button>
+    <button onclick="recruterSoldat()">➕ Recruter 1 Soldat (Coûte 50 Or)</button>
     
-    <!-- ⚠️ NOUVEAU BOUTON POUR LA PUBLICITÉ -->
+    <!-- 🟢 BOUTON BONUS DE MONÉTISATION -->
     <button class="btn-pub" onclick="regarderPublicite()">📺 Bonus : +100 Or (Vidéo)</button>
 
+    <div class="mission-box">
+        <h3>🎯 Mission : Assaut de l'Avant-Poste</h3>
+        <p>Défense ennemie requise : <b>10 Soldats</b> 🛡️</p>
+        <p>Récompense de victoire : <b>+500 Or</b> 💰</p>
+        <button class="btn-attack" onclick="attaquerEnnemi()">⚔️ Lancer l'Assaut !</button>
+    </div>
+
     <script>
-        // Initialisation Telegram
         const tg = window.Telegram.WebApp;
         tg.expand();
 
-        // Variables du jeu
-        let or = 0;
-        let soldats = 0;
+        if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
+            const prenom = tg.initDataUnsafe.user.first_name;
+            document.getElementById('titre-tma').innerText = `🪖 QG de ${prenom}`;
+        }
+
+        let or = parseFloat(localStorage.getItem('guerre_or')) || 0;
+        let soldats = parseInt(localStorage.getItem('guerre_soldats')) || 0;
+
+        MettreAJourAffichage();
+
+        function vibrerTelephone() {
+            if (tg.HapticFeedback) {
+                tg.HapticFeedback.impactOccurred('medium');
+            }
+        }
 
         function genererOr() {
+            vibrerTelephone();
             or += 10;
             MettreAJourAffichage();
+            sauvegarderJeu();
         }
 
         function recruterSoldat() {
+            vibrerTelephone();
             if (or >= 50) {
                 or -= 50;
                 soldats += 1;
                 MettreAJourAffichage();
+                sauvegarderJeu();
             } else {
-                alert("Pas assez d'or !");
+                tg.showAlert("Alerte ! Vous n'avez pas assez d'or pour recruter ce soldat.");
             }
         }
 
-        // ⚠️ ÉTAPE B : LA FONCTION JAVASCRIPT POUR MONETAG
+        function attaquerEnnemi() {
+            vibrerTelephone();
+            if (soldats >= 10) {
+                soldats -= 5; 
+                or += 500;    
+                MettreAJourAffichage();
+                sauvegarderJeu();
+                tg.showAlert("🏆 VICTOIRE ! Vos troupes ont écrasé l'ennemi. Butin : +500 Or. (5 soldats sont tombés au combat)");
+            } else {
+                tg.showAlert("❌ ÉCHEC ! Votre armée est trop faible. Il vous faut au moins 10 soldats pour lancer cet assaut.");
+            }
+        }
+
+        // 🟢 ACTION DU BOUTON PUBLICITAIRE MONETAG
         function regarderPublicite() {
-            // On vérifie si le système de pub Monetag est bien chargé
+            vibrerTelephone();
             if (typeof showRewardedAd === 'function') {
-                
-                // On lance la publicité plein écran
                 showRewardedAd().then((result) => {
-                    // Si le joueur a regardé la pub jusqu'au bout
                     if (result && result.status === 'completed') {
-                        or += 100; // On lui donne la récompense
+                        or += 100;
                         MettreAJourAffichage();
-                        alert("Merci ! Vous avez reçu 100 Or ! 💰");
+                        sauvegarderJeu();
+                        tg.showAlert("Merci ! Votre soutien vous rapporte +100 Or ! 💰");
                     } else {
-                        alert("Vous devez regarder toute la vidéo pour obtenir la récompense.");
+                        tg.showAlert("Vous devez regarder toute la vidéo pour obtenir le bonus.");
                     }
                 }).catch((error) => {
-                    console.error("Erreur de pub :", error);
-                    alert("Impossible de charger la publicité pour le moment.");
+                    tg.showAlert("Publicité indisponible pour le moment.");
                 });
-
             } else {
-                alert("Le réseau publicitaire est en cours de chargement, réessayez dans 3 secondes.");
+                tg.showAlert("Le réseau publicitaire charge... Réessayez dans 3 secondes.");
             }
+        }
+
+        // Production passive
+        setInterval(function() {
+            if (soldats > 0) {
+                or += soldats; 
+                MettreAJourAffichage();
+                sauvegarderJeu();
+            }
+        }, 1000);
+
+        function sauvegarderJeu() {
+            localStorage.setItem('guerre_or', or);
+            localStorage.setItem('guerre_soldats', soldats);
         }
 
         function MettreAJourAffichage() {
-            document.getElementById('or').innerText = or;
+            document.getElementById('or').innerText = Math.floor(or);
             document.getElementById('soldats').innerText = soldats;
+            document.getElementById('vitesse').innerText = soldats;
         }
     </script>
 </body>
