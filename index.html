@@ -1,15 +1,12 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta name="monetag" content="9f1c32448adef092d6e5298d2d5f04e4">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mon Empire de Guerre</title>
     
-    <!-- SDK Telegram obligatoire -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
-    <!-- 🟢 SCRIPT MONETAG : Remplacez VOTRE_ZONE_ID_ICI par vos 7 chiffres -->
     <script src="https://sad.adsforgame.com/a/b.js" data-zone="11016132"></script>
 
     <style>
@@ -21,6 +18,8 @@
         .btn-pub:hover { background: #27ae60; }
         .btn-attack { background: #c0392b; } /* Rouge pour le combat */
         .btn-attack:hover { background: #962d22; }
+        .btn-share { background: #3498db; } /* Bleu pour le partage */
+        .btn-share:hover { background: #2980b9; }
         .stats { font-size: 18px; margin: 15px 0; background: #2c3e50; padding: 15px; border-radius: 8px; border: 1px solid #34495e; }
         .production { color: #2ecc71; font-size: 14px; margin-top: 5px; font-weight: bold; }
         .mission-box { background: #2f3640; border: 2px dashed #718093; padding: 15px; border-radius: 8px; margin-top: 20px; }
@@ -39,8 +38,9 @@
     <button onclick="genererOr()">⛏️ Exploiter la Mine d'or (+10 Or)</button>
     <button onclick="recruterSoldat()">➕ Recruter 1 Soldat (Coûte 50 Or)</button>
     
-    <!-- 🟢 BOUTON BONUS DE MONÉTISATION -->
     <button class="btn-pub" onclick="regarderPublicite()">📺 Bonus : +100 Or (Vidéo)</button>
+
+    <button class="btn-share" onclick="partagerLeJeu()">🔗 Inviter des Alliés (+ Recruter)</button>
 
     <div class="mission-box">
         <h3>🎯 Mission : Assaut de l'Avant-Poste</h3>
@@ -69,6 +69,17 @@
             }
         }
 
+        // 🟢 FONCTION DE PARTAGE SANS TOUCHER AU CODE PLUS TARD
+        function partagerLeJeu() {
+            vibrerTelephone();
+            
+            const lienJeu = "https://t.me/MonGuerreSuperBot/start";
+            const messageTexte = "🚀 Viens m'aider à bâtir la plus puissante armée sur Telegram ! Clique ici pour jouer avec moi :";
+            
+            // Cette ligne ouvre directement la fonction de partage native de Telegram
+            tg.openTelegramLink(`https://t.me/share/url?url=${encodeURIComponent(lienJeu)}&text=${encodeURIComponent(messageTexte)}`);
+        }
+
         function genererOr() {
             vibrerTelephone();
             or += 10;
@@ -95,13 +106,12 @@
                 or += 500;    
                 MettreAJourAffichage();
                 sauvegarderJeu();
-                tg.showAlert("🏆 VICTOIRE ! Vos troupes ont écrasé l'ennemi. Butin : +500 Or. (5 soldats sont tombés au combat)");
+                tg.showAlert("🏆 VICTOIRE ! Vos troupes ont écrasé l'ennemi. Butin : +500 Or.");
             } else {
-                tg.showAlert("❌ ÉCHEC ! Votre armée est trop faible. Il vous faut au moins 10 soldats pour lancer cet assaut.");
+                tg.showAlert("❌ ÉCHEC ! Il vous faut au moins 10 soldats pour lancer cet assaut.");
             }
         }
 
-        // 🟢 ACTION DU BOUTON PUBLICITAIRE MONETAG
         function regarderPublicite() {
             vibrerTelephone();
             if (typeof showRewardedAd === 'function') {
