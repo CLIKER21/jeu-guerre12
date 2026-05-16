@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mon Jeu de Guerre Monétisé</title>
+    
+    <!-- SDK Telegram -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+    <!-- ⚠️ ÉTAPE A : LE SCRIPT MONETAG -->
+    <!-- Remplacez l'URL ci-dessous par celle fournie par Monetag dans votre tableau de bord -->
+    <script src="https://sad.adsforgame.com/a/b.js" data-zone="11015041"></script>
+
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; background: #1c2024; color: white; padding: 20px; }
+        button { background: #e67e22; border: none; padding: 12px 20px; color: white; font-size: 16px; border-radius: 5px; cursor: pointer; margin: 10px; display: inline-block; width: 80%; max-width: 300px; }
+        button:hover { background: #d35400; }
+        .btn-pub { background: #2ecc71; font-weight: bold; } /* Bouton vert pour la pub */
+        .btn-pub:hover { background: #27ae60; }
+        .stats { font-size: 18px; margin: 20px 0; background: #2c3e50; padding: 15px; border-radius: 8px; }
+    </style>
+</head>
+<body>
+
+    <h1>🪖 Quartier Général</h1>
+    
+    <div class="stats">
+        <p>Or disponible : <span id="or">0</span> 💰</p>
+        <p>Soldats recrutés : <span id="soldats">0</span> 🎖️</p>
+    </div>
+
+    <button onclick="genererOr()">Mine d'or (+10 Or)</button>
+    <button onclick="recruterSoldat()">Recruter 1 Soldat (50 Or)</button>
+    
+    <!-- ⚠️ NOUVEAU BOUTON POUR LA PUBLICITÉ -->
+    <button class="btn-pub" onclick="regarderPublicite()">📺 Bonus : +100 Or (Vidéo)</button>
+
+    <script>
+        // Initialisation Telegram
+        const tg = window.Telegram.WebApp;
+        tg.expand();
+
+        // Variables du jeu
+        let or = 0;
+        let soldats = 0;
+
+        function genererOr() {
+            or += 10;
+            MettreAJourAffichage();
+        }
+
+        function recruterSoldat() {
+            if (or >= 50) {
+                or -= 50;
+                soldats += 1;
+                MettreAJourAffichage();
+            } else {
+                alert("Pas assez d'or !");
+            }
+        }
+
+        // ⚠️ ÉTAPE B : LA FONCTION JAVASCRIPT POUR MONETAG
+        function regarderPublicite() {
+            // On vérifie si le système de pub Monetag est bien chargé
+            if (typeof showRewardedAd === 'function') {
+                
+                // On lance la publicité plein écran
+                showRewardedAd().then((result) => {
+                    // Si le joueur a regardé la pub jusqu'au bout
+                    if (result && result.status === 'completed') {
+                        or += 100; // On lui donne la récompense
+                        MettreAJourAffichage();
+                        alert("Merci ! Vous avez reçu 100 Or ! 💰");
+                    } else {
+                        alert("Vous devez regarder toute la vidéo pour obtenir la récompense.");
+                    }
+                }).catch((error) => {
+                    console.error("Erreur de pub :", error);
+                    alert("Impossible de charger la publicité pour le moment.");
+                });
+
+            } else {
+                alert("Le réseau publicitaire est en cours de chargement, réessayez dans 3 secondes.");
+            }
+        }
+
+        function MettreAJourAffichage() {
+            document.getElementById('or').innerText = or;
+            document.getElementById('soldats').innerText = soldats;
+        }
+    </script>
+</body>
+</html>
