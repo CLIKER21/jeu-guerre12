@@ -3,24 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>Mon Empire de Guerre</title>
-         <script src='//libtl.com/sdk.js' data-zone='11018518' data-sdk='show_11018518'></script>
-   <style>
-        body { font-family: Arial, sans-serif; text-align: center; background: #1c2024; color: white; padding: 20px; margin: 0; }
-        h1 { font-size: 24px; margin-bottom: 5px; color: #f1c40f; }
-        button { background: #e67e22; border: none; padding: 14px 20px; color: white; font-size: 16px; border-radius: 8px; cursor: pointer; margin: 8px 0; display: inline-block; width: 90%; max-width: 320px; font-weight: bold; box-shadow: 0 4px 6px rgba(0,0,0,0.2); }
-        button:hover { background: #d35400; }
-        .btn-pub { background: #2ecc71; } /* Vert pour la pub */
-        .btn-pub:hover { background: #27ae60; }
-        .btn-attack { background: #c0392b; } /* Rouge pour le combat */
-        .btn-attack:hover { background: #962d22; }
-        .btn-share { background: #3498db; } /* Bleu pour le partage */
-        .btn-share:hover { background: #2980b9; }
-        .stats { font-size: 18px; margin: 15px 0; background: #2c3e50; padding: 15px; border-radius: 8px; border: 1px solid #34495e; }
-        .production { color: #2ecc71; font-size: 14px; margin-top: 5px; font-weight: bold; }
-        .mission-box { background: #2f3640; border: 2px dashed #718093; padding: 15px; border-radius: 8px; margin-top: 20px; }
-    </style>
-</head>
+    <title>Mon Empire de Guerre</title>
+    
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+<script src='//libtl.com/sdk.js' data-zone='11018518' data-sdk='show_11018518'></script>
+    </head>
 <body>
 
     <h1 id="titre-tma">🪖 QG de Commandement</h1>
@@ -45,6 +32,22 @@
         <button class="btn-attack" onclick="attaquerEnnemi()">⚔️ Lancer l'Assaut !</button>
     </div>
 
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; background: #1c2024; color: white; padding: 20px; margin: 0; }
+        h1 { font-size: 24px; margin-bottom: 5px; color: #f1c40f; }
+        button { background: #e67e22; border: none; padding: 14px 20px; color: white; font-size: 16px; border-radius: 8px; cursor: pointer; margin: 8px 0; display: inline-block; width: 90%; max-width: 320px; font-weight: bold; box-shadow: 0 4px 6px rgba(0,0,0,0.2); }
+        button:hover { background: #d35400; }
+        .btn-pub { background: #2ecc71; }
+        .btn-pub:hover { background: #27ae60; }
+        .btn-attack { background: #c0392b; }
+        .btn-attack:hover { background: #962d22; }
+        .btn-share { background: #3498db; }
+        .btn-share:hover { background: #2980b9; }
+        .stats { font-size: 18px; margin: 15px 0; background: #2c3e50; padding: 15px; border-radius: 8px; border: 1px solid #34495e; }
+        .production { color: #2ecc71; font-size: 14px; margin-top: 5px; font-weight: bold; }
+        .mission-box { background: #2f3640; border: 2px dashed #718093; padding: 15px; border-radius: 8px; margin-top: 20px; }
+    </style>
+
     <script>
         const tg = window.Telegram.WebApp;
         tg.expand();
@@ -65,14 +68,10 @@
             }
         }
 
-        // 🟢 FONCTION DE PARTAGE SANS TOUCHER AU CODE PLUS TARD
         function partagerLeJeu() {
             vibrerTelephone();
-            
             const lienJeu = "https://t.me/MonGuerreSuperBot/start";
             const messageTexte = "🚀 Viens m'aider à bâtir la plus puissante armée sur Telegram ! Clique ici pour jouer avec moi :";
-            
-            // Cette ligne ouvre directement la fonction de partage native de Telegram
             tg.openTelegramLink(`https://t.me/share/url?url=${encodeURIComponent(lienJeu)}&text=${encodeURIComponent(messageTexte)}`);
         }
 
@@ -108,41 +107,27 @@
             }
         }
 
-      function regarderPublicite() {
-    vibrerTelephone();
-// Rewarded interstitial
-
-show_11018518().then(() => {
-    // You need to add your user reward function here, which will be executed after the user watches the ad.
-    // For more details, please refer to the detailed instructions.
-    alert('You have seen an ad!');
-})
-             if (typeof show_11018518 === 'function') {
-        show_11018518().then(() => {
-            or += 100;
-            MettreAJourAffichage();
-            sauvegarderJeu();
-            tg.showAlert("Merci ! Votre soutien vous rapporte +100 Or ! 💰");
-        }).catch((error) => {
-            tg.showAlert("Publicité indisponible pour le moment.");
-        });
-    } else {
-        tg.showAlert("Le réseau publicitaire charge... Réessayez dans 3 secondes.");
-    }
-}
+        // 🟢 FONCTION PUBLICITAIRE CORRIGÉE ET SÉCURISÉE PC/MOBILE
+        function regarderPublicite() {
             vibrerTelephone();
-            if (typeof showRewardedAd === 'function') {
-                showRewardedAd().then((result) => {
-                    if (result && result.status === 'completed') {
-                        or += 100;
-                        MettreAJourAffichage();
-                        sauvegarderJeu();
-                        tg.showAlert("Merci ! Votre soutien vous rapporte +100 Or ! 💰");
-                    } else {
-                        tg.showAlert("Vous devez regarder toute la vidéo pour obtenir le bonus.");
-                    }
+            
+            // Détection automatique du PC (Windows 7/8/10, Mac, Linux)
+            const estSurPC = navigator.userAgent.toLowerCase().match(/(windows|macintosh|linux)/) && !navigator.userAgent.toLowerCase().match(/android/);
+            
+            if (estSurPC) {
+                tg.showAlert("⚠️ Les vidéos Bonus sont disponibles uniquement sur l'application Telegram de votre Téléphone !");
+                return; 
+            }
+
+            // Exécution du format Rewarded Interstitial sur smartphone
+            if (typeof show_11018518 === 'function') {
+                show_11018518().then(() => {
+                    or += 100;
+                    MettreAJourAffichage();
+                    sauvegarderJeu();
+                    tg.showAlert("Merci ! Votre soutien vous rapporte +100 Or ! 💰");
                 }).catch((error) => {
-                    tg.showAlert("Publicité indisponible pour le moment.");
+                    tg.showAlert("Publicité indisponible pour le moment, réessayez.");
                 });
             } else {
                 tg.showAlert("Le réseau publicitaire charge... Réessayez dans 3 secondes.");
