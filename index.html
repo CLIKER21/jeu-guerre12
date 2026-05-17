@@ -108,7 +108,21 @@
             }
         }
 
-        function regarderPublicite() {
+      function regarderPublicite() {
+    vibrerTelephone();
+    if (typeof show_11018518 === 'function') {
+        show_11018518().then(() => {
+            or += 100;
+            MettreAJourAffichage();
+            sauvegarderJeu();
+            tg.showAlert("Merci ! Votre soutien vous rapporte +100 Or ! 💰");
+        }).catch((error) => {
+            tg.showAlert("Publicité indisponible pour le moment.");
+        });
+    } else {
+        tg.showAlert("Le réseau publicitaire charge... Réessayez dans 3 secondes.");
+    }
+}
             vibrerTelephone();
             if (typeof showRewardedAd === 'function') {
                 showRewardedAd().then((result) => {
