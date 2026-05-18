@@ -1,41 +1,39 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mon Empire de Guerre</title>
+    <title>My War Empire</title>
     
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <script src='https://libtl.com/sdk.js' data-zone='11018518' data-sdk='show_11018518'></script>
     </head>
 <body>
 
-    <h1 id="titre-tma">🪖 QG de Commandement</h1>
-    
-    <div class="stats">
-        <p>Or disponible : <span id="or">0</span> 💰</p>
-        <p>Soldats entraînés : <span id="soldats">0</span> 🎖️</p>
-        <div class="production">Revenus passifs : +<span id="vitesse">0</span> Or / sec</div>
+    <h1 id="titre-tma">🪖 Command HQ</h1>
+<div class="stats">
+        <p>Gold available: <span id="or">0</span> 💰</p>
+        <p>Trained soldiers: <span id="soldiers">0</span> 🎖️</p>
+        <div class="production">Passive income: +<span id="speed">0</span> Gold / sec</div>
     </div>
 
-    <button onclick="genererOr()">⛏️ Exploiter la Mine d'or (+10 Or)</button>
-    <button onclick="recruterSoldat()">➕ Recruter 1 Soldat (Coûte 50 Or)</button>
+    <button onclick="generateOr()">⛏️ Mine the Gold Mine (+10 Gold)</button>
+    <button onclick="recruitSoldier()">➕ Recruit 1 Soldier (Costs 50 Gold)</button>
     
-    <button class="btn-pub" onclick="regarderPublicite()">📺 Bonus : +100 Or (Vidéo)</button>
+    <button class="btn-pub" onclick="watchAdvertising()">📺 Bonus: +100 Gold (Video)</button>
 
-    <button class="btn-share" onclick="partagerLeJeu()">🔗 Inviter des Alliés (+ Recruter)</button>
+    <button class="btn-share" onclick="shareTheGame()">🔗 Invite Allies (+ Recruit)</button>
 
     <div class="mission-box">
-        <h3>🎯 Mission : Assaut de l'Avant-Poste</h3>
-        <p>Défense ennemie requise : <b>10 Soldats</b> 🛡️</p>
-        <p>Récompense de victoire : <b>+500 Or</b> 💰</p>
-        <button class="btn-attack" onclick="attaquerEnnemi()">⚔️ Lancer l'Assaut !</button>
+        <h3>🎯 Mission: Assault on the Outpost</h3>
+        <p>Enemy defense required: <b>10 Soldiers</b> 🛡️</p>
+        <p>Victory reward: <b>+500 Gold</b> 💰</p>
+        <button class="btn-attack" onclick="attackEnemy()">⚔️ Launch Assault!</button>
     </div>
-
-    <style>
-        body { font-family: Arial, sans-serif; text-align: center; background: #1c2024; color: white; padding: 20px; margin: 0; }
+<style>
+        body { font-family: Arial, sans-serif; text-align: center; background: #1c2024; color:white; padding: 20px; margin: 0; }
         h1 { font-size: 24px; margin-bottom: 5px; color: #f1c40f; }
-        button { background: #e67e22; border: none; padding: 14px 20px; color: white; font-size: 16px; border-radius: 8px; cursor: pointer; margin: 8px 0; display: inline-block; width: 90%; max-width: 320px; font-weight: bold; box-shadow: 0 4px 6px rgba(0,0,0,0.2); }
+        button { background: #e67e22; border:none; padding: 14px 20px; color:white; font-size: 16px; border-radius: 8px; cursor: pointer; margin: 8px 0; display: inline-block; width: 90%; max-width: 320px; font-weight: bold; box-shadow: 0 4px 6px rgba(0,0,0,0.2); }
         button:hover { background: #d35400; }
         .btn-pub { background: #2ecc71; }
         .btn-pub:hover { background: #27ae60; }
@@ -53,105 +51,101 @@
         tg.expand();
 
         if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
-            const prenom = tg.initDataUnsafe.user.first_name;
-            document.getElementById('titre-tma').innerText = `🪖 QG de ${prenom}`;
+            const first_name = tg.initDataUnsafe.user.first_name;
+            document.getElementById('title-tma').innerText = `🪖 HQ of ${first name}`;
         }
+let or = parseFloat(localStorage.getItem('war_or')) || 0;
+        let soldiers = parseInt(localStorage.getItem('war_soldiers')) || 0;
 
-        let or = parseFloat(localStorage.getItem('guerre_or')) || 0;
-        let soldats = parseInt(localStorage.getItem('guerre_soldats')) || 0;
+        UpdateDisplay();
 
-        MettreAJourAffichage();
-
-        function vibrerTelephone() {
+        function vibrateTelephone() {
             if (tg.HapticFeedback) {
                 tg.HapticFeedback.impactOccurred('medium');
             }
         }
 
-        function partagerLeJeu() {
-            vibrerTelephone();
-            const lienJeu = "https://t.me/MonGuerreSuperBot/start";
-            const messageTexte = "🚀 Viens m'aider à bâtir la plus puissante armée sur Telegram ! Clique ici pour jouer avec moi :";
-            tg.openTelegramLink(`https://t.me/share/url?url=${encodeURIComponent(lienJeu)}&text=${encodeURIComponent(messageTexte)}`);
+        function shareTheGame() {
+            vibratePhone();
+            const gamelink = "https://t.me/MonGuerreSuperBot/start";
+            const messageText = "🚀 Come help me build the most powerful army on Telegram! Click here to play with me:";
+            tg.openTelegramLink(`https://t.me/share/url?url=${encodeURIComponent(gamelink)}&text=${encodeURIComponent(messageTexte)}`);
         }
-
-        function genererOr() {
-            vibrerTelephone();
+function generateOr() {
+            vibratePhone();
             or += 10;
-            MettreAJourAffichage();
-            sauvegarderJeu();
+            UpdateDisplay();
+            saveGame();
         }
 
-        function recruterSoldat() {
-            vibrerTelephone();
+        function recruitSoldier() {
+            vibratePhone();
             if (or >= 50) {
-                or -= 50;
-                soldats += 1;
-                MettreAJourAffichage();
-                sauvegarderJeu();
+                gold -= 50;
+                soldiers += 1;
+                UpdateDisplay();
+                saveGame();
             } else {
-                tg.showAlert("Alerte ! Vous n'avez pas assez d'or pour recruter ce soldat.");
+                tg.showAlert("Alert! You do not have enough gold to recruit this soldier.");
             }
         }
 
-        function attaquerEnnemi() {
-            vibrerTelephone();
-            if (soldats >= 10) {
-                soldats -= 5; 
-                or += 500;    
-                MettreAJourAffichage();
-                sauvegarderJeu();
-                tg.showAlert("🏆 VICTOIRE ! Vos troupes ont écrasé l'ennemi. Butin : +500 Or.");
+        function attackEnemy() {
+            vibratePhone();
+            if (soldiers >= 10) {
+                soldiers -= 5; 
+                gold += 500;    
+                UpdateDisplay();
+                saveGame();
+                tg.showAlert("🏆 VICTORY! Your troops have crushed the enemy. Loot: +500 Gold.");
             } else {
-                tg.showAlert("❌ ÉCHEC ! Il vous faut au moins 10 soldats pour lancer cet assaut.");
+                tg.showAlert("❌ FAIL! You need at least 10 soldiers to launch this assault.");
             }
         }
-
-        // 🟢 FONCTION PUBLICITAIRE CORRIGÉE ET SÉCURISÉE PC/MOBILE
-        function regarderPublicite() {
-            vibrerTelephone();
+// 🟢 ADVERTISING FUNCTION CORRECTED AND SECURE PC/MOBILE
+        function watchAdvertisement() {
+            vibratePhone();
             
-            // Détection automatique du PC (Windows 7/8/10, Mac, Linux)
-            const estSurPC = navigator.userAgent.toLowerCase().match(/(windows|macintosh|linux)/) && !navigator.userAgent.toLowerCase().match(/android/);
+            // Automatic PC detection (Windows 7/8/10, Mac, Linux)
+            const isOnPC = navigator.userAgent.toLowerCase().match(/(windows|macintosh|linux)/) && !navigator.userAgent.toLowerCase().match(/android/);
             
-            if (estSurPC) {
-                tg.showAlert("⚠️ Les vidéos Bonus sont disponibles uniquement sur l'application Telegram de votre Téléphone !");
+            if (isOnPC) {
+                tg.showAlert("⚠️ Bonus videos are only available on the Telegram application on your Phone!");
                 return; 
             }
 
-            // Exécution du format Rewarded Interstitial sur smartphone
+            // Running Rewarded Interstitial format on smartphone
             if (typeof show_11018518 === 'function') {
                 show_11018518().then(() => {
-                    or += 100;
-                    MettreAJourAffichage();
-                    sauvegarderJeu();
-                    tg.showAlert("Merci ! Votre soutien vous rapporte +100 Or ! 💰");
+                    gold += 100;
+                    UpdateDisplay();
+                    saveGame();
+                    tg.showAlert("Thank you! Your support earns you +100 Gold! 💰");
                 }).catch((error) => {
-                    tg.showAlert("Publicité indisponible pour le moment, réessayez.");
+                    tg.showAlert("Advertising currently unavailable, try again.");
                 });
             } else {
-                tg.showAlert("Le réseau publicitaire charge... Réessayez dans 3 secondes.");
+                tg.showAlert("The ad network is loading... Try again in 3 seconds.");
             }
         }
-
-        // Production passive
+// Passive production
         setInterval(function() {
-            if (soldats > 0) {
-                or += soldats; 
-                MettreAJourAffichage();
-                sauvegarderJeu();
+            if (soldiers > 0) {
+                gold += soldiers; 
+                UpdateDisplay();
+                saveGame();
             }
         }, 1000);
 
-        function sauvegarderJeu() {
-            localStorage.setItem('guerre_or', or);
-            localStorage.setItem('guerre_soldats', soldats);
+        function saveGame() {
+            localStorage.setItem('war_gold', gold);
+            localStorage.setItem('war_soldiers', soldiers);
         }
 
-        function MettreAJourAffichage() {
+        function UpdateDisplay() {
             document.getElementById('or').innerText = Math.floor(or);
-            document.getElementById('soldats').innerText = soldats;
-            document.getElementById('vitesse').innerText = soldats;
+            document.getElementById('soldiers').innerText = soldiers;
+            document.getElementById('speed').innerText = soldiers;
         }
     </script>
 </body>
